@@ -1,14 +1,22 @@
-import { useState } from 'react'
-import { View, Text, StyleSheet, SafeAreaView, Image, TextInput, TouchableOpacity, ImageBackground } from 'react-native'
+import { useState, useEffect } from 'react'
+import { View, Text, StyleSheet, SafeAreaView, TextInput, TouchableOpacity, FlatList } from 'react-native'
 import { Logo } from '../../components/logo'
-import { Ionicons } from '@expo/vector-icons' //icones
-
-import strogonoff from '../../../assets/arroz.png'
-import bife from '../../../assets/bife.png'
-import pizza from '../../../assets/pizza.png'
+import { Ionicons } from '@expo/vector-icons'
+import { FoodList } from '../../components/foodList'
+import api from '../../services/api'
 
 export function Home() {
   const [inputValue, setInputValue] = useState('')
+  const [foods, setFoods] = useState([])
+
+  useEffect(() => {
+    async function fetchApi() {
+      const response = await api.get('/foods')
+      setFoods(response.data)
+    }
+
+    fetchApi()
+  }, [])
 
   function handleSearch() {
     console.log(`Voce Digitou: ${inputValue}`)
@@ -33,29 +41,12 @@ export function Home() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.containerCards}>
-        <ImageBackground source={strogonoff} style={styles.cards}>
-          <View style={styles.detailsCard}>
-            <Text style={styles.titlecard}>Strogonoff</Text>
-            <Text style={styles.textcard}>5 ingredientes | 40 min</Text>
-          </View>
-        </ImageBackground>
-
-        <ImageBackground source={bife} style={styles.cards}>
-          <View style={styles.detailsCard}>
-            <Text style={styles.titlecard}>Bife a Parmegiana</Text>
-            <Text style={styles.textcard}>5 ingredientes | 40 min</Text>
-          </View>
-        </ImageBackground>
-
-        <ImageBackground source={pizza} style={styles.cards}>
-          <View style={styles.detailsCard}>
-            <Text style={styles.titlecard}>Pizza Calabresa</Text>
-            <Text style={styles.textcard}>5 ingredientes | 40 min</Text>
-          </View>
-        </ImageBackground>
-
-      </View>
+      <FlatList
+        data={foods}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={({ item }) => <FoodList data={item} />}
+        showsVerticalScrollIndicator={false}
+      />
 
     </SafeAreaView>
   )
@@ -92,33 +83,5 @@ const styles = StyleSheet.create({
     height: 45,
     width: '86%',
     maxWidth: '86%',
-  },
-  containerCards: {
-    flexDirection: 'column',
-    width: '100%',
-  },
-  cards: {
-    height: 150,
-    width: '100%',
-    marginBottom: 14,
-    borderRadius: 10
-  },
-  detailsCard: {
-    color: '#fff',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    height: '100%',
-    marginLeft: 20,
-    marginTop: 20
-  },
-  titlecard: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  textcard: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',
   },
 })
