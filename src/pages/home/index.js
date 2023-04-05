@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, SafeAreaView, TextInput, TouchableOpacity, FlatList } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import { Logo } from '../../components/logo'
 import { Ionicons } from '@expo/vector-icons'
 import { FoodList } from '../../components/foodList'
@@ -8,6 +9,7 @@ import api from '../../services/api'
 export function Home() {
   const [inputValue, setInputValue] = useState('')
   const [foods, setFoods] = useState([])
+  const navigation = useNavigation()
 
   useEffect(() => {
     async function fetchApi() {
@@ -19,7 +21,11 @@ export function Home() {
   }, [])
 
   function handleSearch() {
-    console.log(`Voce Digitou: ${inputValue}`)
+    if (!inputValue) return;
+
+    let input = inputValue
+    setInputValue('')
+    navigation.navigate('Search', { name: input })
   }
 
   return (
