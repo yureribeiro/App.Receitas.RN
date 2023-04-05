@@ -3,8 +3,8 @@ import { View, Text, StyleSheet } from "react-native";
 export function Instructions({ data, index }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.index}>{index + 1} -</Text>
-      <Text style={styles.instruction}> {data.text}</Text>
+      <Text style={styles.index}>{index + 1} - </Text>
+      <Text style={styles.instruction}>{data.text}</Text>
     </View>
   )
 }
@@ -18,12 +18,11 @@ const styles = StyleSheet.create({
     textAlign: 'flex-start'
   },
   index: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 'bold'
   },
   instruction: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 400
-
   }
 })
